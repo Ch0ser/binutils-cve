@@ -16,13 +16,7 @@ jobs:
         with:
           username: choser
           password: ${{ secrets.DOCKER_PASSWORD }}
-      - name: Download and verify image tar
-        run: |
-          wget https://github.com/Ch0ser/binutils-cve/raw/main/aiseceval_cve-2016-4489.tar -O aiseceval_cve-2016-4489.tar
-          ls -lh aiseceval_cve-2016-4489.tar
-          if [ $(wc -c aiseceval_cve-2016-4489.tar) -ne 524999999 ]; then echo "File size mismatch"; exit 1; fi
       - name: Load and push image
         run: |
           docker load -i aiseceval_cve-2016-4489.tar
-          docker build -t choser/aiseceval_cve-2016-4489:latest -f .
-          docker push choser/aiseceval_cve-2016-4489:latest
+          docker buildx build -t choser/aiseceval_cve-2016-4489:latest --push -f .
