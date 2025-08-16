@@ -1,0 +1,28 @@
+name: Push to Docker Hub
+on:
+  workflow_dispatch:   # 手动触发
+  push:
+    branches: [ main ]
+
+jobs:
+  build-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Load exported image
+        run: |
+          ls -lh *.tar
+          docker load -i aiseceval_cve-2016-4489.tar
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: giolddiorld
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Push image
+        run: |
+          docker tag e5613b42ca9c giolddiorld/aiseceval_cve-2016-4489:latest
+          docker push giolddiorld/aiseceval_cve-2016-4489:latest
